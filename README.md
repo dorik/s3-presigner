@@ -16,6 +16,7 @@ const { data, isLoading, onUpload } = useUploadFiles();
 
 const { mutate } = useMutation({
   mutationFn: onUpload((body: string) =>
+    // -------👇------ Next.js api route
     fetch("/api/upload", { method: "POST", body }).then((res) => res.json())
   ),
 });
