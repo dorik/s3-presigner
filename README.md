@@ -6,7 +6,7 @@ _Currently supported with React.js projects_
 
 ### Installation
 
-`npm install --save @s3-presigner/server`
+`npm install --save @s3-presigner/client`
 
 ```jsx
 import { useMutation } from "@tanstack/react-query";
@@ -33,7 +33,7 @@ You can implement with any Node.js based backend service
 
 `npm install --save @s3-presigner/server`
 
-### Sample Code
+#### Sample Code
 
 #### With Nextjs
 
