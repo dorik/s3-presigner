@@ -1,1 +1,1 @@
-export { uploadFiles } from "./utils/upload";
+export * from "./hooks";

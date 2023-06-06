@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createS3PresignedUrl } from "@dorik/server";
+import { createS3PresignedUrl } from "@s3-presigner/server";
 
 export default async function uploadHandler(
   req: NextApiRequest,

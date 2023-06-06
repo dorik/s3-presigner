@@ -1,4 +1,13 @@
-const s3Upload = async (presigned, file) => {
+import type {
+  PresignedType,
+  PresignedResponse,
+  GetPresignedUrlsType,
+} from "../types";
+
+const s3Upload = async (
+  presigned: PresignedType,
+  file: File
+): Promise<PresignedResponse> => {
   const res = await fetch(presigned.signedUrl, {
     method: "PUT",
     body: file,
@@ -8,28 +17,31 @@ const s3Upload = async (presigned, file) => {
   });
 
   if (res.ok) {
-    return [
-      presigned.name,
-      { message: "File uploaded successfully", success: true, ...presigned },
-    ];
+    return {
+      message: "File uploaded successfully",
+      success: true,
+      ...presigned,
+    };
   } else {
-    return [
-      presigned.name,
-      { message: "Failed to upload file", success: false, ...presigned },
-    ];
+    return { message: "Failed to upload file", success: false, ...presigned };
   }
 };
 
-export const uploadFiles = async (files, getPresignedUrls) => {
+export const uploadFiles = async (
+  files: File[],
+  getPresignedUrls: GetPresignedUrlsType
+): Promise<PresignedResponse[]> => {
   files = [...files];
   const names = files.map((f) => f.name);
   const body = JSON.stringify(names);
   const data = await getPresignedUrls(body);
   const promises = data.map((presigned) => {
     const file = files.find((f) => f.name === presigned.name);
-    return s3Upload(presigned, file);
+    if (file) {
+      return s3Upload(presigned, file);
+    }
   });
-  const results = await Promise.all(promises);
 
-  return new Map(results);
+  const results = await Promise.all(promises);
+  return results.filter((r) => r) as PresignedResponse[];
 };
