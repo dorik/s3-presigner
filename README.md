@@ -8,7 +8,7 @@ _Currently supported with React.js projects_
 
 `npm install --save @s3-presigner/client`
 
-```jsx
+```tsx
 import { useMutation } from "@tanstack/react-query";
 import { useUploadFiles } from "@s3-presigner/client";
 
@@ -38,9 +38,9 @@ You can implement with any Node.js based backend service
 
 #### With Nextjs
 
-```js
-// nextjs api route
-// for this example: '/api/upload'
+```ts
+// 'src/pages/api/upload.ts'
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { createS3PresignedUrl } from "@s3-presigner/server";
 
