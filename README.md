@@ -87,7 +87,7 @@ const { data, isLoading, onUpload } = useUploadFiles();
 
 const { mutate } = useMutation({
   mutationFn: onUpload((body: string) =>
-    // -------👇------ Next.js api route
+    // -------👇------ server api endpoint
     fetch("/presigned-url", { method: "POST", body }).then((res) => res.json())
   ),
 });
@@ -102,3 +102,17 @@ return (
 ```
 
 **Read the [API Documentation](./packages/client/README.md#api-documentation)**
+
+
+## Upcoming
+
+Currently, the library can only handle uploading files to S3 bucket but it is also important to download files by presigned URL. That's the next goal along with some important features listed below
+
+- [ ] Proper error handling and validation
+- [ ] Allow specific file types
+- [ ] Set a limit for each file size
+- [ ] Notify server after image successfully uploaded
+
+## Contribution 
+
+Feel free to send a pull request for any improvement to the library
