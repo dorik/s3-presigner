@@ -7,6 +7,8 @@ Welcome to the documentation for S3 Presigner, a powerful ⚡️ and user-friend
 
 Maybe because you are looking for it 😎
 
+You might be wondering why would you need S3 Presigner library to upload files to Amazon S3. You could directly upload the file to your backend application, process with `multer` or `sharp` then save it to Amazon S3 bucket or even to file system! 👉 [This is a must read for you](./docs/presigned-url.md)
+
 ## 🎉 Features
 
 - **Simplified File Upload**: With S3 Presigner, you can effortlessly upload files to your Amazon S3 buckets without worrying about the complexities of managing low-level S3 operations. The library handles the authentication, request signing, and multipart upload process, allowing you to focus on building your application.
@@ -43,7 +45,7 @@ import { createS3PresignedUrl } from "@s3-presigner/server";
 // or, Common JS
 const { createS3PresignedUrl } = require("@s3-presigner/server");
 
-router.post('/get-presigned-url', async (req, res) => {
+router.post('/presigned-url', async (req, res) => {
   // Here you can check whether the user have permission to call the API endpoint
   const { getUploadUrl } = createS3PresignedUrl({
     bucket: "{YOUR_S3_BUCKET_NAME}"
@@ -86,7 +88,7 @@ const { data, isLoading, onUpload } = useUploadFiles();
 const { mutate } = useMutation({
   mutationFn: onUpload((body: string) =>
     // -------👇------ Next.js api route
-    fetch("/api/upload", { method: "POST", body }).then((res) => res.json())
+    fetch("/presigned-url", { method: "POST", body }).then((res) => res.json())
   ),
 });
 
