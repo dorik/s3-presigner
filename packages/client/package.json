@@ -2,23 +2,27 @@
   "name": "@s3-presigner/client",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c",
-    "dev": "rollup -c --watch"
+    "build": "rollup -c --bundleConfigAsCjs",
+    "dev": "rollup -c --watch --bundleConfigAsCjs",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "files": [
-    "dist"
+    "dist/**"
   ],
   "keywords": [],
-  "author": "",
+  "author": "Anwar Hussain",
+  "repository": "https://github.com/dorik/s3-presigner/tree/main/packages/client",
   "license": "ISC",
   "devDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsconfig": "*"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }
 }

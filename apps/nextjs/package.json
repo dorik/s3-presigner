@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rm -rf .turbo && rm -rf .next && rm -rf node_modules"
   },
   "dependencies": {
     "@s3-presigner/client": "*",
@@ -14,8 +15,7 @@
     "@tanstack/react-query": "^4.29.12",
     "next": "^13.4.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "ui": "*"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.12",

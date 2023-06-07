@@ -5,10 +5,16 @@ import typescript from "@rollup/plugin-typescript";
 
 const config = {
   input: "src/index.ts",
-  output: {
-    file: "./dist/index.esm.js",
-    format: "esm",
-  },
+  output: [
+    {
+      file: "./dist/index.esm.js",
+      format: "esm",
+    },
+    {
+      file: "./dist/index.cjs.js",
+      format: "cjs",
+    },
+  ],
   plugins: [
     resolve(),
     commonjs(),

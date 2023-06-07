@@ -2,23 +2,30 @@
   "name": "@s3-presigner/server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c --watch"
+    "build": "rollup -c --bundleConfigAsCjs",
+    "dev": "rollup -c --watch --bundleConfigAsCjs",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
+  "files": [
+    "dist/**"
+  ],
   "keywords": [],
-  "author": "",
+  "author": "Anwar Hussain",
+  "repository": "https://github.com/dorik/s3-presigner/tree/main/packages/server",
   "license": "ISC",
   "devDependencies": {
-    "@types/mime-types": "^2.1.1",
     "tsconfig": "*"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@aws-sdk/client-s3": "^3.345.0",
-    "@aws-sdk/s3-request-presigner": "^3.345.0",
+    "@aws-sdk/s3-request-presigner": "^3.345.0"
+  },
+  "dependencies": {
+    "@types/mime-types": "^2.1.1",
     "mime-types": "^2.1.35",
     "nanoid": "^4.0.2",
     "slugify": "^1.6.6"

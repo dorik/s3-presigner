@@ -1,16 +1,19 @@
 {
   "private": true,
+  "name": "@s3-presigner/monorepo",
   "scripts": {
     "build": "turbo run build",
-    "dev": "dotenv -- turbo run dev",
+    "dev": "dotenv -- turbo run dev --no-cache --continue",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
     "@rollup/plugin-typescript": "^11.1.1",
     "@turbo/gen": "^1.9.7",
     "dotenv-cli": "^7.2.1",
@@ -22,10 +25,12 @@
     "turbo": "^1.9.7",
     "typescript": "^5.1.3"
   },
-  "name": "s3-unnamed-oss",
   "packageManager": "npm@8.19.2",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@changesets/cli": "^2.26.1"
+  }
 }

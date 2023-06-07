@@ -10,8 +10,10 @@
     "lint": {},
     "dev": {
       "cache": false,
-      "outputs": [],
-      "dependsOn": ["^dev"]
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
     }
   }
 }

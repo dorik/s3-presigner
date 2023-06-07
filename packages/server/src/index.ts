@@ -2,9 +2,9 @@ import path from "path";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   S3Client,
+  S3ClientConfig,
   PutObjectCommand,
   PutObjectCommandInput,
-  S3ClientConfig,
 } from "@aws-sdk/client-s3";
 import mime from "mime-types";
 import slugify from "slugify";
