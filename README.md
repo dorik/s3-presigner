@@ -104,7 +104,7 @@ return (
 **Read the [API Documentation](./packages/client/README.md#api-documentation)**
 
 
-## Upcoming
+## ✅ Upcoming
 
 Currently, the library can only handle uploading files to S3 bucket but it is also important to download files by presigned URL. That's the next goal along with some important features listed below
 
@@ -113,6 +113,6 @@ Currently, the library can only handle uploading files to S3 bucket but it is al
 - [ ] Set a limit for each file size
 - [ ] Notify server after image successfully uploaded
 
-## Contribution 
+## 🧑🏻‍💻 Contribution 
 
-Feel free to send a pull request for any improvement to the library
+Feel free to send a pull request for any improvement to the library. Don't forget to add emojies 🙌
