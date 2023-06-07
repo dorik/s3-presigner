@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 1.0.3
+
+### Patch Changes
+
+- Add types and validations
+
 ## 1.0.2
 
 ### Patch Changes
