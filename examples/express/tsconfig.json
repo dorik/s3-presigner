@@ -1,0 +1,11 @@
+{
+  "extends": "tsconfig/base.json",
+  "exclude": ["dist", "build", "node_modules"],
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES6",
+    "outDir": "./dist",
+    "baseUrl": "./src"
+  }
+}
