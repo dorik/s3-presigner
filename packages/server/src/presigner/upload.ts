@@ -61,12 +61,14 @@ const getPresignedUrl = async ({
 
 export const getUploadUrl =
   (opts: Omit<TgetPresignedUrl, "name" | "size">) =>
-  async (filesInfo: TFilesInfo): Promise<TgetPresignedUrlOutput[]> => {
+  async (filesInfo: TFilesInfo) => {
     // validate filesInfo
     assert(filesInfo, FilesInfoSchema);
 
-    const presignedPromises = filesInfo.map((fInfo) =>
-      getPresignedUrl({ ...fInfo, ...opts })
-    );
+    const presignedPromises = filesInfo.map(async (fInfo) => {
+      const data = await getPresignedUrl({ ...fInfo, ...opts });
+      return { ...data, position: fInfo.position };
+    });
+
     return await Promise.all(presignedPromises);
   };

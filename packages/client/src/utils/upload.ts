@@ -1,4 +1,4 @@
-import { array, assert, Describe, object, string } from "superstruct";
+import { array, assert, Describe, number, object, string } from "superstruct";
 
 import type {
   PresignedType,
@@ -11,6 +11,7 @@ const PresignedUrlsResponseSchema: Describe<PresignedType[]> = array(
     key: string(),
     src: string(),
     name: string(),
+    position: number(),
     fileType: string(),
     signedUrl: string(),
   })
@@ -40,17 +41,23 @@ const s3Upload = async (
 };
 
 export const uploadFiles = async (
-  files: File[],
+  files: FileList,
   getPresignedUrls: GetPresignedUrlsType
 ): Promise<PresignedResponse[]> => {
-  files = [...files];
-  const filesInfo = files.map(({ name, size, type }) => ({ name, size, type }));
+  const filesInfo = Object.values(files).map(
+    ({ name, size, type }, position) => ({
+      type,
+      name,
+      size,
+      position,
+    })
+  );
   const data = await getPresignedUrls(filesInfo);
   // validate callback response
   assert(data, PresignedUrlsResponseSchema);
 
   const promises = data.map((presigned) => {
-    const file = files.find((f) => f.name === presigned.name);
+    const file = files.item(presigned.position);
     if (file) {
       return s3Upload(presigned, file);
     }

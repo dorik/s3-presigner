@@ -25,5 +25,6 @@ export const FilesInfoSchema = array(
     name: string(),
     size: number(),
     type: string(),
+    position: number(),
   })
 );

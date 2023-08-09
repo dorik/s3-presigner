@@ -16,6 +16,7 @@ export default async function uploadHandler(
         name: string(),
         size: max(number(), 400000),
         type: string(),
+        position: number(),
       })
     )
   );

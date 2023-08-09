@@ -2,6 +2,7 @@ export type PresignedType = {
   key: string;
   src: string;
   name: string;
+  position: number;
   fileType: string;
   signedUrl: string;
 };
