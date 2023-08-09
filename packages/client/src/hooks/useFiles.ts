@@ -6,7 +6,7 @@ export const useUploadFiles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<PresignedResponse[]>();
 
-  const onUpload = (cb: GetPresignedUrlsType) => async (files: File[]) => {
+  const onSelect = (cb: GetPresignedUrlsType) => async (files: File[]) => {
     setIsLoading(true);
     const data = await uploadFiles(files, cb);
     setData(data);
@@ -16,7 +16,7 @@ export const useUploadFiles = () => {
 
   return {
     data,
+    onSelect,
     isLoading,
-    onUpload,
   };
 };

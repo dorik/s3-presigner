@@ -11,20 +11,14 @@ export const createS3PresignedUrl = (input: createS3PresignedUrlInput) => {
   // input validation
   assert(input, createS3PresignedUrlInputValidator);
 
-  const { bucket, acl, prefix, expiresIn, configuration } = input;
+  const { bucket, acl, prefix = "", expiresIn = 300, configuration } = input;
   const client = new S3Client(configuration || {});
-  const params = { Bucket: bucket, ACL: acl || "public-read" };
+  const params = { Bucket: bucket, ACL: acl };
   const region = (configuration?.region || defaultRegion) as string;
   if (!region) {
     throw "You must specify a region";
   }
-  const opts = {
-    client,
-    params,
-    region,
-    prefix: prefix || "",
-    expiresIn: expiresIn || 300,
-  };
+  const opts = { client, params, region, prefix, expiresIn };
 
   return {
     getUploadUrl: getUploadUrl(opts),

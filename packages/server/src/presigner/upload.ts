@@ -6,11 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import mime from "mime-types";
 
-import {
-  createUniqueFileKey,
-  getS3PublicUrl,
-  parseBody,
-} from "../utils/helpers";
+import { getS3PublicUrl, createUniqueFileKey } from "../utils/helpers";
 
 type PutObjectCommandInputType = Omit<
   PutObjectCommandInput,
@@ -21,6 +17,7 @@ type PutObjectCommandInputType = Omit<
 
 type TgetPresignedUrl = {
   name: string;
+  size: number;
   client: S3Client;
   prefix: string;
   region: string;
@@ -28,6 +25,12 @@ type TgetPresignedUrl = {
     Bucket: string;
   };
   expiresIn: number;
+};
+
+type GetPresignedUrlsInput = {
+  name: string;
+  size: number;
+  type: string;
 };
 
 type TgetPresignedUrlOutput = {
@@ -39,6 +42,7 @@ type TgetPresignedUrlOutput = {
 };
 const getPresignedUrl = async ({
   name,
+  size,
   client,
   prefix,
   region,
@@ -51,29 +55,25 @@ const getPresignedUrl = async ({
   }
   const key = createUniqueFileKey({ prefix, name });
   const src = getS3PublicUrl({ bucket: params.Bucket, key, region });
-  const bucketParams = Object.assign({}, params, {
+  const bucketParams: PutObjectCommandInput = {
+    ...params,
     Key: key,
+    ContentLength: size,
     ContentType: fileType,
-  });
+  };
   const command = new PutObjectCommand(bucketParams);
-
   const signedUrl = await getSignedUrl(client, command, { expiresIn });
 
-  return {
-    src,
-    key,
-    name,
-    fileType,
-    signedUrl,
-  };
+  return { src, key, name, fileType, signedUrl };
 };
 
 export const getUploadUrl =
-  (opts: Omit<TgetPresignedUrl, "name">) =>
-  async (body: string): Promise<TgetPresignedUrlOutput[]> => {
-    const names = parseBody(body);
-    const presignedPromises = names.map((name) =>
-      getPresignedUrl({ name, ...opts })
+  (opts: Omit<TgetPresignedUrl, "name" | "size">) =>
+  async (
+    filesInfo: GetPresignedUrlsInput[]
+  ): Promise<TgetPresignedUrlOutput[]> => {
+    const presignedPromises = filesInfo.map((f) =>
+      getPresignedUrl({ ...f, ...opts })
     );
     return await Promise.all(presignedPromises);
   };

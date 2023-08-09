@@ -24,11 +24,3 @@ export const createUniqueFileKey = ({
   const key = path.join(prefix, `${fileKey}-${nanoid(5)}.${ext}`);
   return key;
 };
-
-export const parseBody = (body: string): string[] => {
-  try {
-    return JSON.parse(body);
-  } catch (err) {
-    throw new Error("Invalid JSON");
-  }
-};
