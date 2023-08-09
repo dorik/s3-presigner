@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createS3PresignedUrl } from "@s3-presigner/server";
-import { object, array, string, number, validate } from "superstruct";
+import { object, array, string, number, validate, max } from "superstruct";
 
 const bucketName = process.env.BUCKET_NAME as string;
 
@@ -14,7 +14,7 @@ export default async function uploadHandler(
     array(
       object({
         name: string(),
-        size: number(),
+        size: max(number(), 400000),
         type: string(),
       })
     )

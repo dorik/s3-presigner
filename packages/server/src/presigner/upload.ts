@@ -7,13 +7,8 @@ import {
 import mime from "mime-types";
 
 import { getS3PublicUrl, createUniqueFileKey } from "../utils/helpers";
-
-type PutObjectCommandInputType = Omit<
-  PutObjectCommandInput,
-  "Bucket" | "Key"
-> & {
-  Bucket: string;
-};
+import { Infer, assert } from "superstruct";
+import { FilesInfoSchema } from "./validation";
 
 type TgetPresignedUrl = {
   name: string;
@@ -27,11 +22,7 @@ type TgetPresignedUrl = {
   expiresIn: number;
 };
 
-type GetPresignedUrlsInput = {
-  name: string;
-  size: number;
-  type: string;
-};
+type TFilesInfo = Infer<typeof FilesInfoSchema>;
 
 type TgetPresignedUrlOutput = {
   src: string;
@@ -40,6 +31,7 @@ type TgetPresignedUrlOutput = {
   fileType: string;
   signedUrl: string;
 };
+
 const getPresignedUrl = async ({
   name,
   size,
@@ -69,9 +61,10 @@ const getPresignedUrl = async ({
 
 export const getUploadUrl =
   (opts: Omit<TgetPresignedUrl, "name" | "size">) =>
-  async (
-    filesInfo: GetPresignedUrlsInput[]
-  ): Promise<TgetPresignedUrlOutput[]> => {
+  async (filesInfo: TFilesInfo): Promise<TgetPresignedUrlOutput[]> => {
+    // validate filesInfo
+    assert(filesInfo, FilesInfoSchema);
+
     const presignedPromises = filesInfo.map((f) =>
       getPresignedUrl({ ...f, ...opts })
     );

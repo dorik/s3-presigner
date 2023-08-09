@@ -1,5 +1,6 @@
 import {
   any,
+  array,
   enums,
   string,
   object,
@@ -18,3 +19,11 @@ export const createS3PresignedUrlInputValidator: Describe<createS3PresignedUrlIn
     acl: optional(enums(["private", "public-read"])),
     configuration: optional(any()),
   });
+
+export const FilesInfoSchema = array(
+  object({
+    name: string(),
+    size: number(),
+    type: string(),
+  })
+);
