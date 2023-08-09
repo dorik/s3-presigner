@@ -65,8 +65,8 @@ export const getUploadUrl =
     // validate filesInfo
     assert(filesInfo, FilesInfoSchema);
 
-    const presignedPromises = filesInfo.map((f) =>
-      getPresignedUrl({ ...f, ...opts })
+    const presignedPromises = filesInfo.map((fInfo) =>
+      getPresignedUrl({ ...fInfo, ...opts })
     );
     return await Promise.all(presignedPromises);
   };
