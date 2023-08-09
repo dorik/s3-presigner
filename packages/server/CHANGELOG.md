@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 2.0.2
+
+### Patch Changes
+
+- Upload image internal position
+
 ## 2.0.1
 
 ### Patch Changes
