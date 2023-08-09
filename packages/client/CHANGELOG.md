@@ -1,5 +1,11 @@
 # @s3-presigner/client
 
+## 2.0.0
+
+### Major Changes
+
+- BREAKING CHANGES: input validation in server \
+
 ## 1.0.3
 
 ### Patch Changes
