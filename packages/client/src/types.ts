@@ -11,4 +11,12 @@ export type PresignedResponse = PresignedType & {
   success: boolean;
 };
 
-export type GetPresignedUrlsType = (param: string) => Promise<PresignedType[]>;
+type GetPresignedUrlsInput = {
+  name: string;
+  size: number;
+  type: string;
+};
+
+export type GetPresignedUrlsType = (
+  input: GetPresignedUrlsInput[]
+) => Promise<PresignedType[]>;

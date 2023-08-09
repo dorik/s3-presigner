@@ -4,12 +4,24 @@ import { useMutation } from "@tanstack/react-query";
 import { useUploadFiles } from "@s3-presigner/client";
 
 const Upload = () => {
-  const { data, isLoading, onUpload } = useUploadFiles();
+  const { data, isLoading, onSelect } = useUploadFiles();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: (input) =>
+      fetch("/api/upload", {
+        method: "POST",
+        body: JSON.stringify(input),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json()),
+  });
 
   const { mutate } = useMutation({
-    mutationFn: onUpload((body: string) =>
-      fetch("/api/upload", { method: "POST", body }).then((res) => res.json())
-    ),
+    mutationFn: onSelect(async (input) => {
+      const f = await mutateAsync(input);
+      return f.data;
+    }),
   });
 
   const handleChange = (e) => {

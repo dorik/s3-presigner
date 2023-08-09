@@ -32,9 +32,8 @@ export const uploadFiles = async (
   getPresignedUrls: GetPresignedUrlsType
 ): Promise<PresignedResponse[]> => {
   files = [...files];
-  const names = files.map((f) => f.name);
-  const body = JSON.stringify(names);
-  const data = await getPresignedUrls(body);
+  const filesInfo = files.map(({ name, size, type }) => ({ name, size, type }));
+  const data = await getPresignedUrls(filesInfo);
   const promises = data.map((presigned) => {
     const file = files.find((f) => f.name === presigned.name);
     if (file) {
