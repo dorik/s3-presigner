@@ -6,7 +6,7 @@
 
 ## Usage
 
-Currently the package will work only with React projects. It can be used with any data fetching library or even without any
+Currently the package will work only with React application. It can be used with any data fetching library or even without any
 
 ## API Documentation
 
@@ -17,8 +17,17 @@ Currently the package will work only with React projects. It can be used with an
 It receives no parameter and returns an object of the following properties:
 
 - `data`: A list of information about your files after they have been successfully uploaded or failed. Each item of the list contains [these properties](#data)
-- `isLoading`: It is a boolean value that tells you when the file is being uploaded
-- `onUpload`: This method handles most of the heavy job. It receives a callback that fetches presigned url from your server ([see server implementation guide](../server/README.md#s3-presignerserver)). The callback must return the value it receives from the server, and the signature of return value must match the response value of `getUploadUrl` on the server
+- `isLoading`: It is a boolean value, `true` while the file is being uploaded, `false` when uploading is finished
+- `onSelect`: This method does most of the heavy job. It is responsible for preparing files before it can upload them to S3 with presigned URLs. It takes a callback function as the first argument that fetches presigned URLs from your server ([see server implementation guide](../server/README.md#s3-presignerserver)). The callback must return an array of presigned URLs sent from the server. The return type is an array of
+  ```ts
+    key: string;
+    src: string;
+    name: string;
+    position: number;
+    fileType: string;
+    signedUrl: string;
+  ```
+  If the return type is not provided onSelect callback will throw a validation error.
 
 ## `data`
 
@@ -30,31 +39,3 @@ It receives no parameter and returns an object of the following properties:
 - `key`: S3 key for the file
 - `name`: Name of the file
 - `fileType`: Mime type of the file
-- `signedUrl`: Presigned url where the client have uploaded file
-
-*** Argh! It's too much, let's see the code example: ***
-
-## Sample Code
-
-```tsx
-import * as React from 'react';
-import { useMutation } from "@tanstack/react-query";
-import { useUploadFiles } from "@s3-presigner/client";
-
-const { data, isLoading, onUpload } = useUploadFiles();
-
-const { mutate } = useMutation({
-  mutationFn: onUpload((body: string) =>
-    // -------👇------ Next.js api route
-    fetch("/api/upload", { method: "POST", body }).then((res) => res.json())
-  ),
-});
-
-const handleChange = (event) => {
-  mutate(event.target.files);
-};
-
-return (
-    <input type="file" multiple onChange={handleChange} />
-)
-```

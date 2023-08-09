@@ -1,7 +1,7 @@
 # S3 Presigner
 
 ## 👋 Introduction
-Welcome to the documentation for S3 Presigner, a powerful ⚡️ and user-friendly 🐈 library that simplifies the process of uploading files to Amazon S3. Whether you're a seasoned developer or new to working with S3, this library aims to streamline your file uploading workflow and provide an intuitive API for integrating S3 file uploads into your applications.
+Welcome to the documentation for S3 Presigner, a powerful ⚡️ yet user-friendly 🐈 library that simplifies the process of uploading files to Amazon S3. Whether you're a seasoned developer or new to working with S3, this library aims to streamline your file uploading workflow and provide an intuitive API for integrating S3 file uploads into your applications.
 
 ## 🤨 Why
 
@@ -50,11 +50,11 @@ router.post('/presigned-url', async (req, res) => {
   const { getUploadUrl } = createS3PresignedUrl({
     bucket: "{YOUR_S3_BUCKET_NAME}"
   });
-  // req.body is a JSON stringified payload 
+  // req.body will contain file info
   // provided by the client library -- 👇 --
   const data = await getUploadUrl(req.body);
 
-  return res.json(data);
+  return res.json({ data });
 });
 ```
 
@@ -76,20 +76,30 @@ yarn add @s3-presigner/client
 
 ### 💅 Usage 
 
-It can be used with any data fetching library or even without any. For simplicity purpose we have used `@tanstack/react-query`
+It can be used with any data fetching library or even without any. To make the examples simple, we have used `@tanstack/react-query`
 
 ```tsx
 import * as React from 'react';
 import { useMutation } from "@tanstack/react-query";
 import { useUploadFiles } from "@s3-presigner/client";
 
-const { data, isLoading, onUpload } = useUploadFiles();
+const { data, isLoading, onSelect } = useUploadFiles();
 
 const { mutate } = useMutation({
-  mutationFn: onUpload((body: string) =>
-    // -------👇------ server api endpoint
-    fetch("/presigned-url", { method: "POST", body }).then((res) => res.json())
-  ),
+  mutationFn: onSelect(async (input) => {
+    // server api endpoint ---------👇---------
+    const response = await fetch("/presigned-url", {
+      method: "POST",
+      body: JSON.stringify(input),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    if(!response.ok) throw new Error("Error msg for client");
+    const result = await response.json();
+    
+    return result.data;
+  })
 });
 
 const handleChange = (event) => {
@@ -110,7 +120,7 @@ Currently, the library can only handle uploading files to S3 bucket but it is al
 
 - [ ] Proper error handling and validation
 - [ ] Allow specific file types
-- [ ] Set a limit for each file size
+- [x] Set a limit for each file size
 - [ ] Notify server after image successfully uploaded
 
 ## 🧑🏻‍💻 Contribution 
