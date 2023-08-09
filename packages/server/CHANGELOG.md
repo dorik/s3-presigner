@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 2.0.1
+
+### Patch Changes
+
+- adds input validation
+
 ## 2.0.0
 
 ### Major Changes
