@@ -1,23 +1,24 @@
-export type PresignedType = {
+export type TUploadFileResponse = {
+  file: File;
   key: string;
   src: string;
   name: string;
-  position: number;
+  fileType: string;
+  success: boolean;
+};
+
+export type TGetUploadUrlsFnRes = {
+  key: string;
+  src: string;
+  name: string;
   fileType: string;
   signedUrl: string;
 };
 
-export type PresignedResponse = PresignedType & {
-  message: string;
-  success: boolean;
-};
-
-type GetPresignedUrlsInput = {
-  name: string;
-  size: number;
-  type: string;
-};
-
-export type GetPresignedUrlsType = (
-  input: GetPresignedUrlsInput[]
-) => Promise<PresignedType[]>;
+export type TGetUploadUrlsFn = (
+  input: {
+    readonly name: string;
+    readonly size: number;
+    readonly type: string;
+  }[]
+) => Promise<TGetUploadUrlsFnRes[]>;

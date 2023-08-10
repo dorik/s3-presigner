@@ -23,7 +23,6 @@ It receives no parameter and returns an object of the following properties:
     key: string;
     src: string;
     name: string;
-    position: number;
     fileType: string;
     signedUrl: string;
   ```

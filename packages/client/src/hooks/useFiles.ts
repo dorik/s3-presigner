@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { uploadFiles } from "../utils/upload";
-import type { GetPresignedUrlsType, PresignedResponse } from "../types";
+import type { TGetUploadUrlsFn, TUploadFileResponse } from "../types";
 
 export const useUploadFiles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<PresignedResponse[]>();
+  const [data, setData] = useState<TUploadFileResponse[]>();
 
-  const onSelect = (cb: GetPresignedUrlsType) => async (files: FileList) => {
+  const onSelect = (callback: TGetUploadUrlsFn) => async (files: FileList) => {
     setIsLoading(true);
-    const data = await uploadFiles(files, cb);
+    const data = await uploadFiles(files, callback);
     setData(data);
     setIsLoading(false);
     return data;

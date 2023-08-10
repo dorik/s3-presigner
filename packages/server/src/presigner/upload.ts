@@ -5,42 +5,41 @@ import {
   PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import mime from "mime-types";
+import { assert } from "superstruct";
 
-import { getS3PublicUrl, createUniqueFileKey } from "../utils/helpers";
-import { Infer, assert } from "superstruct";
 import { FilesInfoSchema } from "./validation";
+import { getS3PublicUrl, createUniqueFileKey } from "../utils/helpers";
 
 type TgetPresignedUrl = {
-  name: string;
-  size: number;
-  client: S3Client;
-  prefix: string;
-  region: string;
-  params: Omit<PutObjectCommandInput, "Key" | "Bucket"> & {
+  readonly name: string;
+  readonly size: number;
+  readonly client: S3Client;
+  readonly prefix: string;
+  readonly region: string;
+  readonly params: Omit<PutObjectCommandInput, "Key" | "Bucket"> & {
     Bucket: string;
   };
-  expiresIn: number;
+  readonly expiresIn: number;
 };
 
-type TFilesInfo = Infer<typeof FilesInfoSchema>;
+type TFileInfo = {
+  readonly name: string;
+  readonly size: number;
+  readonly type: string;
+};
 
 type TgetPresignedUrlOutput = {
-  src: string;
-  key: string;
-  name: string;
-  fileType: string;
-  signedUrl: string;
+  readonly src: string;
+  readonly key: string;
+  readonly name: string;
+  readonly fileType: string;
+  readonly signedUrl: string;
 };
 
-const getPresignedUrl = async ({
-  name,
-  size,
-  client,
-  prefix,
-  region,
-  params,
-  expiresIn,
-}: TgetPresignedUrl): Promise<TgetPresignedUrlOutput> => {
+const getPresignedUrl = async (
+  props: TgetPresignedUrl
+): Promise<TgetPresignedUrlOutput> => {
+  const { name, size, client, prefix, region, params, expiresIn } = props;
   const fileType = mime.lookup(name);
   if (!fileType) {
     throw "File type not found";
@@ -61,14 +60,13 @@ const getPresignedUrl = async ({
 
 export const getUploadUrl =
   (opts: Omit<TgetPresignedUrl, "name" | "size">) =>
-  async (filesInfo: TFilesInfo) => {
+  async (filesInfo: TFileInfo[]) => {
     // validate filesInfo
     assert(filesInfo, FilesInfoSchema);
 
-    const presignedPromises = filesInfo.map(async (fInfo) => {
-      const data = await getPresignedUrl({ ...fInfo, ...opts });
-      return { ...data, position: fInfo.position };
-    });
+    const presignedPromises = filesInfo.map((fInfo) =>
+      getPresignedUrl({ ...fInfo, ...opts })
+    );
 
     return await Promise.all(presignedPromises);
   };

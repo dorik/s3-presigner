@@ -1,27 +1,23 @@
-import { array, assert, Describe, number, object, string } from "superstruct";
+import { array, assert, Describe, object, string } from "superstruct";
 
 import type {
-  PresignedType,
-  PresignedResponse,
-  GetPresignedUrlsType,
+  TGetUploadUrlsFn,
+  TGetUploadUrlsFnRes,
+  TUploadFileResponse,
 } from "../types";
 
-const PresignedUrlsResponseSchema: Describe<PresignedType[]> = array(
+const PresignedUrlsResponseSchema: Describe<TGetUploadUrlsFnRes[]> = array(
   object({
     key: string(),
     src: string(),
     name: string(),
-    position: number(),
     fileType: string(),
     signedUrl: string(),
   })
 );
 
-const s3Upload = async (
-  presigned: PresignedType,
-  file: File
-): Promise<PresignedResponse> => {
-  const res = await fetch(presigned.signedUrl, {
+const s3Upload = async (signedUrl: string, file: File) => {
+  const res = await fetch(signedUrl, {
     method: "PUT",
     body: file,
     headers: {
@@ -29,40 +25,32 @@ const s3Upload = async (
     },
   });
 
-  if (res.ok) {
-    return {
-      message: "File uploaded successfully",
-      success: true,
-      ...presigned,
-    };
-  } else {
-    return { message: "Failed to upload file", success: false, ...presigned };
-  }
+  return { success: res.ok };
 };
 
 export const uploadFiles = async (
-  files: FileList,
-  getPresignedUrls: GetPresignedUrlsType
-): Promise<PresignedResponse[]> => {
-  const filesInfo = Object.values(files).map(
-    ({ name, size, type }, position) => ({
-      type,
-      name,
-      size,
-      position,
-    })
+  fileList: FileList,
+  getUploadUrls: TGetUploadUrlsFn
+): Promise<TUploadFileResponse[]> => {
+  const files = Object.values(fileList);
+  const filesInfo = files.map(({ name, size, type }) =>
+    Object.freeze({ type, name, size })
   );
-  const data = await getPresignedUrls(filesInfo);
+  const data = await getUploadUrls(filesInfo);
   // validate callback response
   assert(data, PresignedUrlsResponseSchema);
 
-  const promises = data.map((presigned) => {
-    const file = files.item(presigned.position);
-    if (file) {
-      return s3Upload(presigned, file);
+  const promises = data.map(async (presigned) => {
+    const { name, signedUrl, ...rest } = presigned;
+    const file = files.find((file) => file.name === name);
+    if (!file) {
+      const error = new Error("The file wasn't found to upload: " + name);
+      throw error;
     }
+
+    const uploaded = await s3Upload(signedUrl, file);
+    return { ...uploaded, ...rest, name, file };
   });
 
-  const results = await Promise.all(promises);
-  return results.filter((r) => r) as PresignedResponse[];
+  return await Promise.all(promises);
 };
