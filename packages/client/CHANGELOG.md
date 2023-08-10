@@ -1,5 +1,11 @@
 # @s3-presigner/client
 
+## 2.1.0
+
+### Minor Changes
+
+- Update types and response properties
+
 ## 2.0.2
 
 ### Patch Changes

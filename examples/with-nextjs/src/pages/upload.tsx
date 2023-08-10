@@ -7,7 +7,7 @@ const Upload = () => {
   const { data, isLoading, onSelect } = useUploadFiles();
 
   const { mutateAsync } = useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: unknown) => {
       const resp = await fetch("/api/upload", {
         method: "POST",
         body: JSON.stringify(input),
