@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 2.1.1
+
+### Patch Changes
+
+- remove position
+
 ## 2.1.0
 
 ### Minor Changes
