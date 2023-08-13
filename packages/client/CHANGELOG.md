@@ -1,5 +1,11 @@
 # @s3-presigner/client
 
+## 2.1.2
+
+### Patch Changes
+
+- 39c601c: Testing CI publish
+
 ## 2.1.1
 
 ### Patch Changes
