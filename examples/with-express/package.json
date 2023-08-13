@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "tsc": "tsc",
     "start": "node dist/app.js"
   },
   "keywords": [],
