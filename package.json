@@ -8,7 +8,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "turbo clean && rm -rf node_modules",
-    "publish-packages": "npm run build && changeset version && changeset publish"
+    "publish-packages": "npm run build"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.3",
