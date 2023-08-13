@@ -20,14 +20,16 @@ Before you can star using the package with your backend application, you need to
 
    ```ts
    const { getUploadUrl } = createS3PresignedUrl({
-     configuration: {
-       region: "{YOUR_AWS_DEFAULT_REGION}",
-       credentials: {
-         accessKeyId: "{YOUR_AWS_ACCESS_KEY_ID}",
-         secretAccessKey: "{YOUR_AWS_SECRET_ACCESS_KEY}",
-       },
-     },
-   });
+      // ...
+      // `configuration` object is optional if you have global env setup for aws credentials
+      configuration: {
+        region: "{YOUR_S3_BUCKET_REGION}",
+        credentials: {
+          accessKeyId: "{YOUR_AWS_ACCESS_KEY_ID}",
+          secretAccessKey: "{YOUR_AWS_SECRET_ACCESS_KEY}",
+        },
+      },
+    });
    ```
 
 Whether your backend applicaiton is written in REST or GraphQL API, you can use the library to handle file uploads to your S3 bucket
@@ -46,7 +48,7 @@ You may use this library only to generate S3 presigned URL to upload files on yo
 
 - `bucket`: (`required`) Your S3 bucket name
 - `prefix`: (`optional`) If you do not want to place all the uploaded files into the root folder(!) of your S3 bucket then provide a `string` value to the property. You also can organize files in your S3 bucket by providing a dynamic string value to the property. Default to root
-- `acl`: (`optional`) Decide who will be allowed to access your S3 files uploaded to the bucket. Default to `public-read`, [list of accepted values](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#:~:text=%3C/AccessControlPolicy%3E-,Canned%20ACL,-Amazon%20S3%20supports)
+- `acl`: (`optional`) Decide who will be allowed to access your S3 files uploaded to the bucket. Default to `undefined` which makes objects private, [list of accepted values](https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html#:~:text=%3C/AccessControlPolicy%3E-,Canned%20ACL,-Amazon%20S3%20supports)
 - `expiresIn`: (`optional`) How long the presigned URL will be valid for. Accepts `number` value in seconds. Default to `300`
 - `configuration`: (`optional`) If you already have your AWS credentials setup with default env variables and do not want to upload files to the same AWS account or region, you can use this property to configure the S3 client with different AWS credentials and region.
 
@@ -60,7 +62,7 @@ You may use this library only to generate S3 presigned URL to upload files on yo
 
 ### Parameters
 
-`getUploadUrl` receives a single patameter, provided by the client with the request object or query arguement. `@s3-presigner/server` does not interfare with server implementation. It does not care how you handle your server api requests. It only asks for a JSON string coming from the client prepared by `@s3-presigner/client`
+`getUploadUrl` receives a single patameter, provided by the client with the request object or query arguement. `@s3-presigner/server` does not interfare with server implementation. It does not care how you handle your server api requests. It only asks for an array of file information coming from the client prepared by `@s3-presigner/client`
 
 ### Returns
 
@@ -71,45 +73,3 @@ It returns an array of object that contains information about files that will be
 - `name`: Name of the file
 - `fileType`: Mime type of the file
 - `signedUrl`: Presigned url where the client will upload file
-
-## Sample Code
-
-### With Nextjs
-
-```ts
-// 'src/pages/api/upload.ts'
-
-import { NextApiRequest, NextApiResponse } from "next";
-import { createS3PresignedUrl } from "@s3-presigner/server";
-
-export default async function uploadHandler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { getUploadUrl } = createS3PresignedUrl({
-    bucket: "{YOUR_BUCKET_NAME}",
-  });
-  const data = await getUploadUrl(req.body);
-
-  return res.json(data);
-}
-```
-
-### With Express REST API
-
-```js
-const express = require("express");
-const app = express();
-const { createS3PresignedUrl } = require("@s3-presigner/server");
-
-app.post("/api/upload", async (req, res) => {
-  const { getUploadUrl } = createS3PresignedUrl({
-    bucket: "{YOUR_BUCKET_NAME}",
-  });
-  const data = await getUploadUrl(req.body);
-
-  return res.json(data);
-});
-
-module.exports = app;
-```

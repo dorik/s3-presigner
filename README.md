@@ -48,10 +48,23 @@ const { createS3PresignedUrl } = require("@s3-presigner/server");
 router.post('/presigned-url', async (req, res) => {
   // Here you can check whether the user have permission to call the API endpoint
   const { getUploadUrl } = createS3PresignedUrl({
-    bucket: "{YOUR_S3_BUCKET_NAME}"
+     // To make uploaded files publically available by an url
+    acl: "public-read",
+    // `bucket` is the only required property
+    bucket: "{YOUR_S3_BUCKET_NAME}",
+    // `prefix` is used to organize bucket object by folder structure
+    prefix: "{PREFIX_FOR_FILES}", // eg: `images` or `videos`
+    // `configuration` object is optional if you have global env setup for aws credentials
+    configuration: {
+      region: "{YOUR_S3_BUCKET_REGION}",
+      credentials: {
+        accessKeyId: "{YOUR_AWS_ACCESS_KEY_ID}",
+        secretAccessKey: "{YOUR_AWS_SECRET_ACCESS_KEY}",
+      },
+    },
   });
-  // req.body will contain file info
-  // provided by the client library -- 👇 --
+  // req.body contains information about files to be uploaded
+  // provided by the client package --👇--
   const data = await getUploadUrl(req.body);
 
   return res.json({ data });
@@ -118,9 +131,6 @@ return (
 
 Currently, the library can only handle uploading files to S3 bucket but it is also important to download files by presigned URL. That's the next goal along with some important features listed below
 
-- [ ] Proper error handling and validation
-- [ ] Allow specific file types
-- [x] Set a limit for each file size
 - [ ] Notify server after image successfully uploaded
 
 ## 🧑🏻‍💻 Contribution 
