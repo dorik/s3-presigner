@@ -16,7 +16,7 @@ export const createS3PresignedUrl = (input: createS3PresignedUrlInput) => {
   const params = { Bucket: bucket, ACL: acl };
   const region = (configuration?.region || defaultRegion) as string;
   if (!region) {
-    throw "You must specify a region";
+    throw "You must specify a region.";
   }
   const opts = { client, params, region, prefix, expiresIn };
 
