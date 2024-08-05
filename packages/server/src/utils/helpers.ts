@@ -20,7 +20,13 @@ export const createUniqueFileKey = ({
 }) => {
   const nameParts = name.split(".");
   const ext = nameParts.pop();
-  const fileKey = slugify(nameParts.join("."));
+
+  const specialCharactersRegex = /[!@#^&*()"':~]/g;
+  const sanitizedFileKey = slugify(nameParts.join("."), {
+    remove: specialCharactersRegex,
+  });
+  const fileKey = slugify(sanitizedFileKey);
+
   const key = path.join(prefix, `${fileKey}-${nanoid(5)}.${ext}`);
   return key;
 };
