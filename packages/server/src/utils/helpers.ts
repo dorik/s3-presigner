@@ -3,10 +3,7 @@ import slugify from "slugify";
 import { nanoid } from "nanoid";
 
 const sanitizeSpecialChar = (fileKey: string) => {
-  const specialCharactersRegex = /[!@#^&*()"':~]/g;
-  return slugify(fileKey, {
-    remove: specialCharactersRegex,
-  });
+  return fileKey.replace(/[^a-zA-Z0-9]/g, "");
 };
 
 type TgetS3PublicUrl = {
