@@ -2,6 +2,15 @@ import path from "path";
 import slugify from "slugify";
 import { nanoid } from "nanoid";
 
+const sanitizeSpecialChar = (fileKey: string) => {
+  const sanitizedString = fileKey.replace(/[^a-zA-Z0-9]/g, "");
+
+  if (!sanitizedString) {
+    return nanoid(10);
+  }
+  return sanitizedString;
+};
+
 type TgetS3PublicUrl = {
   bucket: string;
   region: string;
@@ -20,7 +29,11 @@ export const createUniqueFileKey = ({
 }) => {
   const nameParts = name.split(".");
   const ext = nameParts.pop();
-  const fileKey = slugify(nameParts.join("."));
+
+  const sanitizedFileKey = sanitizeSpecialChar(nameParts.join("."));
+
+  const fileKey = slugify(sanitizedFileKey);
+
   const key = path.join(prefix, `${fileKey}-${nanoid(5)}.${ext}`);
   return key;
 };
