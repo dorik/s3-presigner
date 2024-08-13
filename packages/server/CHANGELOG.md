@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 2.1.3
+
+### Patch Changes
+
+- 9b4068c: patch bump
+
 ## 2.1.2
 
 ### Patch Changes
