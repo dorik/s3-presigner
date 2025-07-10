@@ -1,5 +1,11 @@
 # @s3-presigner/server
 
+## 2.1.4
+
+### Patch Changes
+
+- efa145a: patch: allow hyphens and underscores in file names
+
 ## 2.1.3
 
 ### Patch Changes
